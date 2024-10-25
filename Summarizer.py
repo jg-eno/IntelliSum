@@ -15,7 +15,7 @@ db = client['Summary']
 collection = db['Content']
 
 
-llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro",google_api_key="AIzaSyBIOJ5f61Wq8S8Nx36IOhS_gdkCN_rBcx8")
+llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro",google_api_key="")
 template = """ 
 You are a personal assisstant who summarizes the mail contents and provides a summary based on the given content.
 Respond with a JSON object using the following instructions : 
