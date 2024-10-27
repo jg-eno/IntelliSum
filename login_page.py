@@ -20,10 +20,9 @@ def add_custom_css():
         }
         .title-text {
             font-family: 'Arial', sans-serif;
-            color: white;
             text-align: center;
             margin-top: 20px;
-            font-weight: bold;
+            color: orange;
         }
         .subheader-text {
             text-align: center;
@@ -52,13 +51,13 @@ def add_custom_css():
             background-color: #2980b9;
         }
         [data-testid="stForm"] {
-            background: #263238;
+            background: #202020;
         }
         [data-testid="stMain"] {
-            background: #37474f;
+            background: black;
         }
         [data-testid="stHeader"] {
-            background: #37474f;
+            background: black;
         }
         [data-testid="stBaseButton-secondaryFormSubmit"] {
             background-color: #263238;
@@ -66,6 +65,9 @@ def add_custom_css():
             border-radius: 5px;
             font-size: 18px;
             padding: 10px;
+        }
+        h3 {
+            color: white;
         }
         </style>
     """, unsafe_allow_html=True)
