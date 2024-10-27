@@ -20,7 +20,7 @@ print("Connected to MongoDB.")
 
 # Language model setup
 print("Setting up the language model...")
-llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", google_api_key="AIzaSyALFGatMOXVieZL2htkKgGxrFoK15EHrgI")
+llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", google_api_key="")
 template = """ 
 You are a personal assistant who summarizes the mail contents and provides a summary based on the given content.
 sender should only contain text.
