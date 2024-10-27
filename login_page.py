@@ -112,7 +112,7 @@ def main():
         st.session_state.logged_in = False
 
     if st.session_state.logged_in:
-        home_page(st.session_state.user_email)
+        landingPage(st.session_state.user_email)
     else:
         login_page()
 
