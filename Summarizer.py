@@ -4,6 +4,7 @@ from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain_core.output_parsers import JsonOutputParser
 from pymongo import MongoClient
 from flask import Flask, request
+import re  # Import regex for parsing sender name
 import json
 
 class JsonCreater(BaseModel):
@@ -19,9 +20,10 @@ print("Connected to MongoDB.")
 
 # Language model setup
 print("Setting up the language model...")
-llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", google_api_key="")
+llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", google_api_key="AIzaSyALFGatMOXVieZL2htkKgGxrFoK15EHrgI")
 template = """ 
 You are a personal assistant who summarizes the mail contents and provides a summary based on the given content.
+sender should only contain text.
 Respond with a JSON object using the following instructions: 
 {{
     "sender":"<Sender of the email>",
@@ -37,6 +39,12 @@ print("Language model setup complete.")
 
 # Flask app setup
 app = Flask(__name__)
+
+# Helper function to extract plain text name from "sender" field
+def extract_sender_name(sender_text):
+    # Regex to match name before any '<' or other non-name characters
+    match = re.match(r"^[^<]+", sender_text)
+    return match.group(0).strip() if match else sender_text.strip()
 
 @app.route("/summary", methods=['POST'])
 def summary():
@@ -57,11 +65,12 @@ def summary():
             # Summarize each email and store the result
             for index, email in enumerate(emails):
                 content = email.get('content')
-                sender = email.get('sender')
-                print(f"Summarizing email {index + 1} from {sender}...")
+                raw_sender = email.get('sender')
+                sender_name = extract_sender_name(raw_sender)  # Extract plain text name
+                print(f"Summarizing email {index + 1} from {sender_name}...")
 
-                msg = chain.invoke({"content": content}, timeout=5)
-                summaries.append({"user": user, "sender": sender, "context": msg["context"]})
+                msg = chain.invoke({"content": content}, timeout=10)
+                summaries.append({"user": user, "sender": sender_name, "context": msg["context"]})
                 print(f"Summary for email {index + 1}: {msg['context']}")
 
             print(f"Deleting previous summaries for this user from MongoDB...")
