@@ -107,7 +107,6 @@ def summary():
                     ]
                 ]
             )
-            print(message.content)
             print(f"Summarizing email {index + 1} from {sender}...")
             msg = chain.invoke({'content': message.content}, timeout=5)
             summaries.append({"user": user, "sender": sender, "context": msg["context"]})
