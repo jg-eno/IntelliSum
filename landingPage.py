@@ -31,11 +31,11 @@ def set_styles():
     st.markdown(f"""
       <style>
       .main {{
-        background: linear-gradient(to right, gray , black);
+        background: linear-gradient(to right, gray, black);
       }}
       .title {{
         font-size: 4em;
-        background: linear-gradient(to right, blue, red);
+        background: linear-gradient(to right, #FF6500, #FFAA00);
         -webkit-background-clip: text;
         color: transparent;
         font-weight: bold;
@@ -43,20 +43,19 @@ def set_styles():
         justify-content: center;
         margin-bottom: 0.3em;
       }}
-      .header {{
-        font-size: 1.2em;
-        color: #e74c3c;
-        font-weight: bold;
-        margin-bottom: 0.5em;
-      }}
-      .sender, .content {{
-        background-color: seashell;
+      .email-box {{
+        background-color: #FFF8E1;
         padding: 1em;
         border-radius: 10px;
         box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
         margin-bottom: 1em;
-        width: auto;
         color: #34495E;
+      }}
+      .sender {{
+        font-weight: bold;
+      }}
+      .content {{
+        margin-top: 0.5em;
       }}
       </style>
     """, unsafe_allow_html=True)
@@ -64,7 +63,7 @@ def set_styles():
 # Applying styles
 set_styles()
 
-st.markdown("<div class='title'>Welcome, User!</div>", unsafe_allow_html=True)
+st.markdown("<div class='title'>Welcome to Gmail Summarization!</div>", unsafe_allow_html=True)
 
 class GmailReader:
     def __init__(self, credentials_path='credentials.json', user="default"):
@@ -158,13 +157,6 @@ if st.button("Fetch Latest Emails"):
     emails = gmail_reader.get_recent_emails(10)
 
     if emails:
-        
-        # for email in emails:
-        #     print(email['sender'])
-        #     print(email['content'])
-        #     col1.markdown(f"<div class='sender'>{email['sender']}</div>", unsafe_allow_html=True)
-        #     col2.markdown(f"<div class='content'>{email['content']}</div>", unsafe_allow_html=True)
-
         try:
             response = requests.post("http://localhost:5000/summary", json={"user": "User", "emails": emails})
             if response.status_code == 200:
@@ -174,14 +166,9 @@ if st.button("Fetch Latest Emails"):
                 while time.time() - start_time < timeout:
                     summaries = list(collection.find({"user": "User"}))
                     if summaries:
-                        col1, col2 = st.columns(2)
-                        col1.markdown("<div class='header'>Sender</div>", unsafe_allow_html=True)
-                        col2.markdown("<div class='header'>Content</div>", unsafe_allow_html=True)
                         st.success("Emails summarized successfully!")
                         for summary in summaries:
-                            print(summary['sender'])
-                            st.markdown(f"<div class='sender'>{summary['sender']}</div>", unsafe_allow_html=True)
-                            st.markdown(f"<div class='content'>{summary['context']}</div>", unsafe_allow_html=True)
+                            st.markdown(f"<div class='email-box'><div class='sender'>{summary['sender']}</div><div class='content'>{summary['context']}</div></div>", unsafe_allow_html=True)
                         break
                     time.sleep(5)
                 else:
